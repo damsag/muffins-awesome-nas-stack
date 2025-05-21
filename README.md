@@ -34,7 +34,7 @@ This role will do the following:
 * Configures SnapRaid/snapper
   * Snapper configs verified and failsafe config re0-create initiated if issued are detected
 * Configures Samba (vladgh.samba.server) w/ custom performance tuning
-* Configures [mergerfs-cache-mover](https://github.com/MonsterMuffin/mergerfs-cache-mover)
+* Configures [mergerfs-cache-mover](https://github.com/damsag/mergerfs-cache-mover)
 * Deploys & Configures [Scrutiny](https://github.com/AnalogJ/scrutiny)
 
 ## More Info
@@ -63,7 +63,7 @@ I would ***highly recommend*** you read, at least, those two blog posts so you a
 Clone the repo somewhere on your machine.
 
 ```bash
-https://github.com/monstermuffin/muffins-awesome-nas-stack.git
+https://github.com/damsag/muffins-awesome-nas-stack.git
 ```
 ## Config
 
@@ -149,7 +149,7 @@ done
 `parity_disks` — Your parity disk(s). Must be at least 1 disk here.
 
 > [!IMPORTANT]
-> As of MANS v0.92 parity disk configuration has changed significantly due to https://github.com/monstermuffin/muffins-awesome-nas-stack/issues/24 and https://github.com/monstermuffin/muffins-awesome-nas-stack/issues/25. 
+> As of MANS v0.92 parity disk configuration has changed significantly due to https://github.com/damsag/muffins-awesome-nas-stack/issues/24 and https://github.com/damsag/muffins-awesome-nas-stack/issues/25. 
 >
 > The role will fail if you have an older version of the variables but a newer version of the role. Simply change the format as below.
 
@@ -254,7 +254,7 @@ parity_disks:
 * A path ***and*** a disk in the format of `/dev/disk/by-id/your-disk`. I don't know why but it's supported.
 ___
 Cache mover things:
-https://github.com/MonsterMuffin/mergerfs-cache-mover
+https://github.com/damsag/mergerfs-cache-mover
 ___
 If you left `configure_scrutiny` to `true` then you can setup `omnibus` or `collector` mode here, if you don't know then leave the default, `omnibus`.
 

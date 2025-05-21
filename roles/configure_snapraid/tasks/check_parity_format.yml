@@ -31,7 +31,7 @@
       - "• Future versions of MANS may deprecate this format"
       - "• Set split_parity_migrate: true to convert to split parity format"
       - "• Migration requires manual snapraid sync with --force flags"
-      - "• Read more: https://github.com/monstermuffin/muffins-awesome-nas-stack?tab=readme-ov-file#split-parity-migration"
+      - "• Read more: https://github.com/damsag/muffins-awesome-nas-stack?tab=readme-ov-file#split-parity-migration"
   when: single_parity_detected and not split_parity_migrate
 
 - name: Record migration notice
@@ -41,7 +41,7 @@
       - ""
       - "• After role completion, check README for required snapraid sync commands"
       - "• Migration requires manual snapraid sync with --force flags"
-      - "• Read more: https://github.com/monstermuffin/muffins-awesome-nas-stack?tab=readme-ov-file#split-parity-migration"
+      - "• Read more: https://github.com/damsag/muffins-awesome-nas-stack?tab=readme-ov-file#split-parity-migration"
   when: single_parity_detected and split_parity_migrate
 
 - name: Warning - Single parity configuration detected

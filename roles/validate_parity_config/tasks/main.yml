@@ -9,7 +9,7 @@
     msg:
       - "• ERROR: Old parity disk configuration format detected."
       - "• Please update your vars.yml to use the new format."
-      - "• Read more: https://github.com/monstermuffin/muffins-awesome-nas-stack/tree/dev#disk-config"
+      - "• Read more: https://github.com/damsag/muffins-awesome-nas-stack/tree/dev#disk-config"
   when: parity_disks[0] is string
 
 - name: Verify parity paths exist
@@ -42,7 +42,7 @@
       - "• Your parity files are currently in legacy single-file format"
       - "• To use split mode, enable split_parity_migrate in your vars"
       - "• Or use only dedicated mode parity"
-      - "• Read more: https://github.com/monstermuffin/muffins-awesome-nas-stack?tab=readme-ov-file#split-parity-migration"
+      - "• Read more: https://github.com/damsag/muffins-awesome-nas-stack?tab=readme-ov-file#split-parity-migration"
   when:
     - single_parity_detected
     - not split_parity_migrate

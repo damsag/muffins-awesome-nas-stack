@@ -131,12 +131,12 @@ data_disks:
   - /dev/disk/by-id/ata-xxxx
 cache_disks:
   - /dev/disk/by-id/nvme-xxxx
-parity_disks: # https://github.com/monstermuffin/muffins-awesome-nas-stack/tree/dev#disk-config
+parity_disks: # https://github.com/damsag/muffins-awesome-nas-stack/tree/dev#disk-config
   - device: /dev/disk/by-id/ata-xxxx
     mode: dedicated
     level: 1
 
-# cache mover vars - https://github.com/monstermuffin/mergerfs-cache-mover
+# cache mover vars - https://github.com/damsag/mergerfs-cache-mover
 cache_mover_autoupdate: true
 cache_mover_update_branch: main # dev applicable here too but could break stuff, check the repo for more info.
 cache_mover_dir: /opt/mergerfs-cache-mover
@@ -150,7 +150,7 @@ cache_mover_excluded_dirs:
   # - exmample dir
   # - other_dirs_as_needed
 on_calendar_schedule: "*-*-* 03:00:00" # 3AM daily https://silentlad.com/systemd-timers-oncalendar-(cron)-format-explained
-cache_mover_notif_enabled: true # https://github.com/monstermuffin/mergerfs-cache-mover/tree/main#notifications
+cache_mover_notif_enabled: true # https://github.com/damsag/mergerfs-cache-mover/tree/main#notifications
 cache_mover_notif_urls: # https://github.com/caronc/apprise#productivity-based-notifications
   - 'discord://webhook_id/webhook_token'
   - 'slack://hooks/tokenA/tokenB/tokenC'
