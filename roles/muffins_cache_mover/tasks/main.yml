@@ -29,7 +29,7 @@
 
     - name: Clone the mergerfs-cache-mover repository
       ansible.builtin.git:
-        repo: https://github.com/MonsterMuffin/mergerfs-cache-mover.git
+        repo: "{{ cache_mover_repo }}"
         dest: "{{ cache_mover_dir }}"
         version: "{{ cache_mover_update_branch }}"
         clone: true

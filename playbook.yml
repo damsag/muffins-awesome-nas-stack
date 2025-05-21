@@ -28,6 +28,7 @@
 
   roles:
     - role: validate_parity_config
+      when: configure_snapraid|default(true)|bool
       tags:
         - validate
         - parity
@@ -66,6 +67,7 @@
         - mergerfs
 
     - role: install_snapraid
+      when: configure_snapraid|default(true)|bool
       tags:
         - install_snapraid
         - snapraid
@@ -86,6 +88,7 @@
         - mergerfs
 
     - role: configure_snapraid
+      when: configure_snapraid|default(true)|bool
       tags:
         - configure_snapraid
         - snapraid
@@ -110,7 +113,7 @@
     - name: Display SnapRAID Configuration Notices
       ansible.builtin.debug:
         msg: "{{ snapraid_warning_message }}"
-      when: snapraid_warning_message is defined
+      when: snapraid_warning_message is defined and configure_snapraid|default(true)|bool
       tags:
         - configure_snapraid
         - snapraid

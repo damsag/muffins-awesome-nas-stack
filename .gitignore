@@ -7,8 +7,8 @@
 __pycache__/
 *.py[cod]
 
-inventories/
-vars.yml
+# inventories/
+# vars.yml
 mansplaybook.yml
 *aah-fs01*
 *_old

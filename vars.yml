@@ -1,0 +1,229 @@
+---
+mans_repo_url: https://github.com/damsag/muffins-awesome-nas-stack.git
+passwordless_sudo: true
+configure_zsh: true # https://github.com/ohmyzsh/ohmyzsh
+configure_powerlevel10k: true
+install_rclone: true # https://github.com/rclone/rclone
+install_docker: true
+install_fastfetch: true # https://github.com/fastfetch-cli/fastfetch
+fastfetch_motd: true
+configure_scrutiny: true # https://github.com/AnalogJ/scrutiny
+configure_hdidle: true # https://github.com/adelolmo/hd-idle
+skip_os_check: false
+
+wipe_and_setup: true # Set this to true to enable wiping of disks. If any disks need to be wiped you will be prompted again.
+
+extra_apps: # add any extra apps you want installed to this list.
+  - iperf3
+  - speedtest-cli
+  - htop
+  - stow
+  - exa
+  - git
+  - mosh
+  - rsync
+  - lm-sensors
+  - iotop
+  - ncdu
+
+# generic:
+timezone: Europe/Warsaw
+smb_media_share_name: media-share
+
+# snapraid/snapper
+configure_snapraid: false
+configure_snapraid_snapraid_deletethreshold: 150
+split_parity_files: 3 # Number of files per parity disk, do not change if unsure.
+split_parity_migrate: true # See README/v0.92 changelog
+
+# sshkeys
+ssh_key_option: github # Options: github, url, file, none
+github_username: damsag # Only used if ssh_key_option is github
+ssh_key_url: https://example.com/ssh_keys.txt
+ssh_key_file: /path/to/local/ssh_keys.txt
+
+# users/groups
+user: "{{ ansible_user }}"
+media_group: media # Group for share perms.
+
+# Adds specified users to Docker group when install_docker is true
+docker_users:
+  - "{{ user }}"
+
+users:
+  - name: "{{ user }}"
+    groups:
+      - media
+      - docker
+  - name: media
+    groups:
+      - media
+    create_home: false
+    shell: /sbin/nologin
+
+# samba config
+samba_users:
+  - name: media
+    password: qwerty
+
+samba_global_config_extras: |
+  # Performance optimizations for high-speed networks and modern storage
+  # These settings significantly improve transfer speeds on 10Gb+ networks and fast storage (Cache layer)
+
+  # Network buffer tuning
+  socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=262144 SO_SNDBUF=262144
+  read raw = yes
+  write raw = yes
+  max xmit = 65536
+  dead time = 15
+  getwd cache = yes
+
+  # I/O optimizations for better throughput
+  strict allocate = yes
+  allocation roundup size = 4096
+  aio read size = 65536
+  aio write size = 65536
+  use sendfile = yes
+
+  # Enable multi-channel for SMB3 (uses multiple network connections when available)
+  server multi channel support = yes
+
+samba_shares:
+  - name: "{{ smb_media_share_name }}"
+    path: "{{ media_cached }}"
+    guest_ok: false
+    writable: true
+    force_group: "{{ media_group }}"
+    create_mode: "0770"
+    directory_mode: "0770"
+    force_create_mode: "0770"
+    force_directory_mode: "0770"
+    write_list: "{{ media_group }}, {{ user }}"
+    owner: "{{ media_group }}"
+    group: "{{ media_group }}"
+
+# mounts
+media_cached: /mnt/media
+media_noncached: /mnt/media # Only used if there is no cache
+media_cold: /mnt/media-cold
+data_mount_path: /mnt/data-disks
+parity_mount_path: /mnt/parity-disks
+cache_mount_path: /mnt/cache-disks
+cache_pool: /mnt/cache-pool # Only used with 2+ cache disks
+
+cache_pool_policy: epmfs # The policy for the cache pool. Leave if using 2+ cache disks and unsure.
+
+# content files
+content_files:
+  - /var/snapraid/snapraid.content
+  - /mnt/parity-disks/parity01/snapraid/snapraid.content
+    ## - /mnt/cache-disks/cache01/snapraid/cache/snapraid.content # remove if you have no cache disks
+    ## must enable a 3rd content file with 2+ parity
+    ## cannot be in a btrfs subvolume
+
+# dirs:
+dir_snapraid_btfs_runner: /var/snapraid-btrfs-runner
+
+# data_directories
+data_directories: 
+  - docker
+  - downloads
+  - files
+  - gdrive
+# disks
+data_disks:
+  - /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F6R7
+# Disk: /dev/sdb PRIMARY
+# Size: 3.6T
+# Model: ST4000VN006-3CW104
+# ID Links:
+#   /dev/disk/by-id/ata-ST4000VN006-3CW104_WW62QVKE
+# Disk: /dev/sdc MIRROR
+# Size: 3.6T
+# Model: ST4000VN008-2DR166
+# ID Links:
+#   /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F6R7
+# Disk: /dev/sdd
+# Size: 298.1G
+# Model: WDC WD3200BEVT-22ZCT0
+# ID Links:
+#   /dev/disk/by-id/ata-WDC_WD3200BEVT-22ZCT0_WD-WXE908TNC485
+cache_disks: 
+  - /cache
+parity_disks: [] # https://github.com/monstermuffin/muffins-awesome-nas-stack/tree/dev#disk-config
+  # - device: /dev/disk/by-id/ata-xxxx
+  #   mode: dedicated
+  #   level: 1
+
+# cache mover vars - https://github.com/monstermuffin/mergerfs-cache-mover
+cache_mover_repo: https://github.com/damsag/mergerfs-cache-mover.git
+cache_mover_autoupdate: true
+cache_mover_update_branch: main # dev applicable here too but could break stuff, check the repo for more info.
+cache_mover_dir: /opt/mergerfs-cache-mover
+cache_mover_log_path: /var/log/cache-mover.log
+cache_mover_threshold_percentage: 70
+cache_mover_target_percentage: 30
+cache_mover_max_workers: 8
+cache_mover_max_log_size_mb: 100
+cache_mover_log_backup_count: 5
+cache_mover_excluded_dirs:
+  # - exmample dir
+  # - other_dirs_as_needed
+on_calendar_schedule: "*-*-* 03:00:00" # 3AM daily https://silentlad.com/systemd-timers-oncalendar-(cron)-format-explained
+cache_mover_notif_enabled: true # https://github.com/monstermuffin/mergerfs-cache-mover/tree/main#notifications
+cache_mover_notif_urls: # https://github.com/caronc/apprise#productivity-based-notifications
+  - 'discord://webhook_id/webhook_token'
+  - 'slack://hooks/tokenA/tokenB/tokenC'
+cache_mover_notif_threshold: true
+
+# scrutiny vars
+scrutiny_mode: "omnibus"  # Can be 'omnibus' or 'collector'. Leave as-is if unsure.
+scrutiny_master_url: "http://scrutiny-master:8080"  # Used only in collector mode
+scrutiny_webui_port: 8080 # Used only in omnibus mode
+
+# Scrutiny notificattion vars
+# https://containrrr.dev/shoutrrr/v0.8/services/discord/ && https://github.com/AnalogJ/scrutiny/blob/master/example.scrutiny.yaml
+
+# Discord
+scrutiny_discord_enabled: false
+scrutiny_discord_token: YOUR_DISCORD_TOKEN
+scrutiny_discord_webhookid: YOUR_DISCORD_WEBHOOK_ID
+
+# Telegram
+scrutiny_telegram_enabled: false
+scrutiny_telegram_token: YOUR_TELEGRAM_TOKEN
+scrutiny_telegram_channels: channel-1,channel-2
+
+# Pushover
+scrutiny_pushover_enabled: false
+scrutiny_pushover_token: YOUR_PUSHOVER_TOKEN
+scrutiny_pushover_userkey: YOUR_PUSHOVER_USER_KEY
+scrutiny_pushover_priority: 1
+scrutiny_pushover_devices: device1,device2
+
+# Slack
+scrutiny_slack_enabled: false
+scrutiny_slack_botname: YOUR_SLACK_BOTNAME
+scrutiny_slack_token_a: YOUR_SLACK_TOKEN_A
+scrutiny_slack_token_b: YOUR_SLACK_TOKEN_B
+scrutiny_slack_token_c: YOUR_SLACK_TOKEN_C
+
+# Gotify
+scrutiny_gotify_enabled: false
+scrutiny_gotify_host: YOUR_GOTIFY_HOST
+scrutiny_gotify_token: YOUR_GOTIFY_TOKEN
+
+# Ntfy
+scrutiny_ntfy_enabled: false
+scrutiny_ntfy_username: YOUR_NTFY_USERNAME
+scrutiny_ntfy_password: YOUR_NTFY_PASSWORD
+scrutiny_ntfy_host: YOUR_NTFY_HOST
+scrutiny_ntfy_port: YOUR_NTFY_PORT
+scrutiny_ntfy_topic: YOUR_NTFY_TOPIC
+
+# Pushbullet
+scrutiny_pushbullet_enabled: false
+scrutiny_pushbullet_token: YOUR_PUSHBULLET_TOKEN
+scrutiny_pushbullet_device: "" # Leave empty, or specify a device
+scrutiny_pushbullet_channel: "" # Leave empty, or specify a channel
+scrutiny_pushbullet_email: "" # Leave empty, or specify an email

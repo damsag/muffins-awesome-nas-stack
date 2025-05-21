@@ -7,6 +7,7 @@
   loop: "{{ parity_disks }}"
   loop_control:
     index_var: index
+  when: parity_disks | length > 0
 
 - name: Ensure parity mounts are present in fstab
   ansible.builtin.blockinfile:
@@ -22,6 +23,7 @@
       {{ disk.device }}  {{ parity_mount_path }}/parity{{ '%02d' % loop.index }}  ext4  {{ manage_disks_nas_ext4_mount_opts }}  0  0
       {% endif %}
       {% endfor %}
+  when: parity_disks | length > 0
 
 - name: Mount parity disks
   ansible.posix.mount:
@@ -33,6 +35,7 @@
   loop: "{{ parity_disks }}"
   loop_control:
     index_var: index
+  when: parity_disks | length > 0
 
 # Cache Disks
 - name: Cache disks block
