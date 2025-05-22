@@ -173,6 +173,8 @@ cache_mover_max_workers: 8
 cache_mover_max_log_size_mb: 100
 cache_mover_log_backup_count: 5
 cache_mover_excluded_dirs:
+  - docker/data/immich/postgres
+  - docker/data/immich/thumbs
   # - exmample dir
   # - other_dirs_as_needed
 on_calendar_schedule: "*-*-* 03:00:00" # 3AM daily https://silentlad.com/systemd-timers-oncalendar-(cron)-format-explained
