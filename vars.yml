@@ -131,7 +131,9 @@ data_directories:
   - gdrive
 # disks
 data_disks:
-  - /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F6R7
+  # - /dev/disk/by-id/ata-ST4000VN006-3CW104_WW62QVKE #PRIMARY
+  # - /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F6R7 #MIRROR
+  - /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F8WV #BACKUP
 # Disk: /dev/sdb PRIMARY
 # Size: 3.6T
 # Model: ST4000VN006-3CW104
@@ -147,6 +149,12 @@ data_disks:
 # Model: WDC WD3200BEVT-22ZCT0
 # ID Links:
 #   /dev/disk/by-id/ata-WDC_WD3200BEVT-22ZCT0_WD-WXE908TNC485
+# Disk: /dev/sdg BACKUP
+# Size: 3.6T
+# Model: ST4000VN008-2DR166
+# ID Links:
+#   /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F8WV
+#   /dev/disk/by-id/usb-ST4000VN_008-2DR166_234567890126-0:0
 cache_disks: 
   - /cache
 parity_disks: [] # https://github.com/damsag/muffins-awesome-nas-stack/tree/dev#disk-config
