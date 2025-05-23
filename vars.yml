@@ -132,8 +132,8 @@ data_directories:
 # disks
 data_disks:
   # - /dev/disk/by-id/ata-ST4000VN006-3CW104_WW62QVKE #PRIMARY
-  # - /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F6R7 #MIRROR
-  - /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F8WV #BACKUP
+  - /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F6R7 #MIRROR
+  # - /dev/disk/by-id/ata-ST4000VN008-2DR166_ZGY9F8WV #BACKUP
 # Disk: /dev/sdb PRIMARY
 # Size: 3.6T
 # Model: ST4000VN006-3CW104
